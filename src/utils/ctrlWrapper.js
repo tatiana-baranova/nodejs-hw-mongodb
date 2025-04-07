@@ -1,5 +1,5 @@
 export const ctrlWrapper = (controller) => {
-    const func = async (req, res, next) => {
+    return async (req, res, next) => {
         try {
             await controller(req, res, next);
         }
@@ -7,5 +7,4 @@ export const ctrlWrapper = (controller) => {
             next(error);
         }
     };
-    return func;
 };
