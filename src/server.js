@@ -14,10 +14,13 @@ export const setupServer = () => {
     app.use(logger);
 
     app.use(contactsRouter);
-    
+
     app.use(notFoundHandler);
     app.use(errorHandler);
 
+    app.use((req, res) => {
+    res.status(404).json({ message: 'Route not found' });
+});
     const port = Number(getEnvVar("PORT", 3000));
 
     app.listen(port, () => console.log(`Server running on ${port} port`));
