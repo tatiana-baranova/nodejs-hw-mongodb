@@ -13,7 +13,8 @@ export const registerUserController = async (req, res) => {
 };
 
 export const loginUserController = async (req, res) => {
-    const session = await loginUser(req.body);
+        const session = await loginUser(req.body);
+        console.log("Session created:", session);
 
     res.cookie('refreshToken', session.refreshToken, {
         httpOnly: true,
@@ -31,6 +32,7 @@ export const loginUserController = async (req, res) => {
             accessToken: session.accessToken,
         }
     });
+
 };
 
 export const logoutUserController = async (req, res) => {
