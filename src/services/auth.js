@@ -18,7 +18,7 @@ export const registerUser = async (payload) => {
 
 export const loginUser = async (payload) => {
     const user = await UsersCollection.findOne({ email: payload.email });
-    if (!user) {
+    if (!user || !user._id) {
         throw createHttpError(401, 'User not found');
     }
 
@@ -32,7 +32,7 @@ export const loginUser = async (payload) => {
     const accessToken = randomBytes(30).toString('base64');
     const refreshToken = randomBytes(30).toString('base64');
 
-    await SessionsCollection.create({
+    const session = await SessionsCollection.create({
         userId: user._id,
         accessToken,
         refreshToken,
@@ -41,9 +41,9 @@ export const loginUser = async (payload) => {
     });
 
     return {
-        accessToken,
-        refreshToken,
-        userId: user._id
+        _id: session._id,
+    accessToken,
+    refreshToken
     };
 };
 
