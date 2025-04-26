@@ -2,12 +2,14 @@ import { UsersCollection } from '../db/models/user.js';
 import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
-import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
+import { FIFTEEN_MINUTES, TEMPLATES_DIR, THIRTY_DAYS } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
-import { SMTP } from '../constants/index.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
 import jwt from 'jsonwebtoken';
+import handlebars from 'handlebars';
+import path from 'node:path';
+import fs from 'node:fs/promises';
 
 export const registerUser = async (payload) => {
     const user = await UsersCollection.findOne({ email: payload.email });
@@ -25,28 +27,25 @@ export const requestResetToken = async (email) => {
     if (!user) {
         throw createHttpError(404, 'User not found');
     }
-    const resetToken = jwt.sign(
-        {
-            sub: user._id,
-            email,
-        },
-        getEnvVar('JWT_SECRET'),
-        {
-            expiresIn: '5m',
-        },
-    );
+    const resetToken = jwt.sign({sub: user._id, email,},getEnvVar('JWT_SECRET'),{expiresIn: '15m',},);
+    const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html',);
+    const templateSource = (await fs.readFile(resetPasswordTemplatePath)).toString();
 
-    const frontendDomain = getEnvVar('APP_DOMAIN');
-    const resetLink = `${frontendDomain}/reset-password?token=${resetToken}`;
+    const template = handlebars.compile(templateSource);
+    const html = template({
+        name: user.name,
+        link: `${getEnvVar('APP_DOMAIN')}/reset-password?token=${resetToken}`
+    });
 
     try {
         await sendEmail({
-        from: getEnvVar(SMTP.SMTP_FROM),
+        from: getEnvVar('SMTP_FROM'),
         to: email,
         subject: 'Reset your password',
-        html: `<p>Click <a href="${resetLink}">here</a> to reset your password!</p>`,
-    });
+        html,
+        });
     } catch(error) {
+        console.error('Email sending error:', error);
         throw createHttpError(500, 'Failed to send the email, please try again later');
     }
 };
@@ -57,9 +56,9 @@ export const loginUser = async (payload) => {
         throw createHttpError(401, 'User not found');
     }
 
-    if (!user.verify) {
-        throw createHttpError(401, 'Please verify your email before logging in.');
-    }
+    // if (!user.verify) {
+    //     throw createHttpError(401, 'Please verify your email before logging in.');
+    // }
 
     const isEqual = await bcrypt.compare(payload.password, user.password);
     if (!isEqual) {
@@ -80,7 +79,7 @@ export const loginUser = async (payload) => {
     });
 
     return {
-        _id: session._id,
+    _id: session._id,
     accessToken,
     refreshToken
     };
