@@ -50,15 +50,41 @@ export const requestResetToken = async (email) => {
     }
 };
 
+export const resetPassword = async (payload) => {
+    let entries;
+    try {
+        entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
+    } catch(err) {
+        if (err instanceof Error) throw createHttpError(401, 'Token is expired or invalid.');
+        throw err;
+    }
+
+    const user = await UsersCollection.findOne({
+        email: entries.email,
+        _id: entries.sub,
+    });
+
+    if (!user) {
+        throw createHttpError(404, 'User not found');
+    }
+
+    const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+    await UsersCollection.updateOne(
+        { _id: user._id },
+        { password: encryptedPassword },
+    );
+};
+
 export const loginUser = async (payload) => {
     const user = await UsersCollection.findOne({ email: payload.email });
     if(!user || !user._id) {
         throw createHttpError(401, 'User not found');
     }
 
-    // if (!user.verify) {
-    //     throw createHttpError(401, 'Please verify your email before logging in.');
-    // }
+    if (!user.verify) {
+        throw createHttpError(401, 'Please verify your email before logging in.');
+    }
 
     const isEqual = await bcrypt.compare(payload.password, user.password);
     if (!isEqual) {
