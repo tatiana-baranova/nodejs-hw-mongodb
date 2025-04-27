@@ -72,7 +72,12 @@ export const resetPassword = async (payload) => {
 
     await UsersCollection.updateOne(
         { _id: user._id },
-        { password: encryptedPassword },
+        {
+            $set: {
+                password: encryptedPassword,
+                sessionId: null,
+            }
+        },
     );
 };
 
