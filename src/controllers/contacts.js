@@ -4,6 +4,8 @@ import { getContacts, getContactById, createContact, updateContact, deleteContac
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { saveFileToUploadDir } from '../middlewares/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { getEnvVar } from "../utils/getEnvVar.js";
 
 export const getContactsController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
@@ -61,12 +63,17 @@ export const patchContactController = async (req, res, ) => {
     let photoUrl;
 
     if (photo) {
-    try {
+        if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
             photoUrl = await saveFileToUploadDir(photo);
-        } catch (err) {
-            throw createHttpError(400, "File upload failed");
         }
     }
+
+    if (!photo) {
+        throw createHttpError(400, "File upload failed");
+    }
+
     const result = await updateContact(contactId,
         {
             ...req.body,
