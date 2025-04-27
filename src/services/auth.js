@@ -82,9 +82,9 @@ export const loginUser = async (payload) => {
         throw createHttpError(401, 'User not found');
     }
 
-    if (!user.verify) {
-        throw createHttpError(401, 'Please verify your email before logging in.');
-    }
+    // if (!user.verify) {
+    //     throw createHttpError(401, 'Please verify your email before logging in.');
+    // }
 
     const isEqual = await bcrypt.compare(payload.password, user.password);
     if (!isEqual) {
