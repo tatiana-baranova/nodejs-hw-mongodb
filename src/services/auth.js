@@ -2,7 +2,7 @@ import { UsersCollection } from '../db/models/user.js';
 import { randomBytes } from 'crypto';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
-import { FIFTEEN_MINUTES, TEMPLATES_DIR, THIRTY_DAYS } from '../constants/index.js';
+import { FIFTEEN_MINUTES, TEMPLATES_DIR, THIRTY_DAYS, SMTP } from '../constants/index.js';
 import { SessionsCollection } from '../db/models/session.js';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendMail.js';
@@ -27,7 +27,7 @@ export const requestResetToken = async (email) => {
     if (!user) {
         throw createHttpError(404, 'User not found');
     }
-    const resetToken = jwt.sign({sub: user._id, email,},getEnvVar('JWT_SECRET'),{expiresIn: '15m',},);
+    const resetToken = jwt.sign({sub: user._id, email,},getEnvVar('JWT_SECRET'),{expiresIn: '5m',},);
     const resetPasswordTemplatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html',);
     const templateSource = (await fs.readFile(resetPasswordTemplatePath)).toString();
 
@@ -39,7 +39,7 @@ export const requestResetToken = async (email) => {
 
     try {
         await sendEmail({
-        from: getEnvVar('SMTP_FROM'),
+        from: getEnvVar(SMTP.SMTP_FROM),
         to: email,
         subject: 'Reset your password',
         html,
