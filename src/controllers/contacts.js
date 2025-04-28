@@ -44,8 +44,20 @@ export const getContactByIdController = async (req, res) => {
 
 export const createContactController = async (req, res) => {
     const userId = req.user._id;
+    const photo = req.file;
+    let photoUrl = null;
+
+    if (photo) {
+        if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+            photoUrl = await saveFileToCloudinary(photo);
+        } else {
+            photoUrl = await saveFileToUploadDir(photo);
+        }
+    }
+
     const data = await createContact({
         ...req.body,
+        photo: photoUrl,
         userId,
     });
 
@@ -70,14 +82,10 @@ export const patchContactController = async (req, res, ) => {
         }
     }
 
-    if (!photo) {
-        throw createHttpError(400, "File upload failed");
-    }
-
     const result = await updateContact(contactId,
         {
             ...req.body,
-            photo: photoUrl || req.body.photo,
+            photo: photoUrl ? photoUrl: req.body.photo,
             userId,
         });
 
