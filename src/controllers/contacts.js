@@ -7,6 +7,7 @@ import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import { getEnvVar } from "../utils/getEnvVar.js";
 
+
 export const getContactsController = async (req, res) => {
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
@@ -69,13 +70,12 @@ export const createContactController = async (req, res) => {
 };
 
 export const patchContactController = async (req, res,) => {
-  console.log("req.params in controller:", req.params);
+  // console.log("req.params in controller:", req.params);
   const userId = req.user._id;
   if (!userId) {
     throw createHttpError(400, 'User is not authenticated');
   }
   const { contactId } = req.params;
-  console.log('Contact ID:', contactId);
   const photo = req.file;
   const contactIdAndUserId = { userId, _id: contactId };
     let photoUrl;
@@ -93,7 +93,7 @@ export const patchContactController = async (req, res,) => {
             photo: photoUrl ? photoUrl: req.body.photo,
         });
 
-        console.log("Update result:", result);
+        // console.log("Update result:", result);
 
     if (!result) {
         throw(createHttpError(404, "Contact not found"));

@@ -46,15 +46,12 @@ export const updateContact = async (contactIdAndUserId, payload, options = {}) =
         payload,
         {
             new: true,
-            // upsert: true,
-            // rawResult: true,
             ...options
         }
     );
-    console.log("Update result:", rawResult);
-    if (!rawResult.value) return null;
+    if (!rawResult) return null;
     return {
-        contact: rawResult.value,
+        contact: rawResult,
         isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     };
 };
