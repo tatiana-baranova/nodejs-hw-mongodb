@@ -39,14 +39,20 @@ export const getContacts = async ({
 export const getContactById = (id, userId) => ContactCollection.findOne({ _id: id, userId });
 export const createContact = payload => ContactCollection.create(payload);
 
-export const updateContact = async (_id, payload,userId, options = {}) => {
-    const { upsert } = options;
-    const rawResult = await ContactCollection.findOneAndUpdate({ _id, userId }, payload, {
-        new: true,
-        upsert,
-        includeResultMetadata: true,
-    });
-    if (!rawResult || !rawResult.value) return null;
+
+export const updateContact = async (contactIdAndUserId, payload, options = {}) => {
+    const rawResult = await ContactCollection.findOneAndUpdate(
+        contactIdAndUserId,
+        payload,
+        {
+            new: true,
+            // upsert: true,
+            // rawResult: true,
+            ...options
+        }
+    );
+    console.log("Update result:", rawResult);
+    if (!rawResult.value) return null;
     return {
         contact: rawResult.value,
         isNew: Boolean(rawResult?.lastErrorObject?.upserted),
