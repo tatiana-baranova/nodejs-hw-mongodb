@@ -70,7 +70,10 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res, ) => {
     const { contactId } = req.params;
-    const userId = req.user._id;
+  const userId = req.user._id;
+  if (!userId) {
+        throw createHttpError(400, 'User is not authenticated');
+    }
     const photo = req.file;
     let photoUrl;
 
@@ -81,7 +84,6 @@ export const patchContactController = async (req, res, ) => {
             photoUrl = await saveFileToUploadDir(photo);
         }
     }
-
     const result = await updateContact(contactId,
         {
             ...req.body,
