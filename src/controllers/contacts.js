@@ -68,13 +68,16 @@ export const createContactController = async (req, res) => {
     });
 };
 
-export const patchContactController = async (req, res, ) => {
-    const { contactId } = req.params;
+export const patchContactController = async (req, res,) => {
+  console.log("req.params in controller:", req.params);
   const userId = req.user._id;
   if (!userId) {
-        throw createHttpError(400, 'User is not authenticated');
-    }
-    const photo = req.file;
+    throw createHttpError(400, 'User is not authenticated');
+  }
+  const { contactId } = req.params;
+  console.log('Contact ID:', contactId);
+  const photo = req.file;
+  const contactIdAndUserId = { userId, _id: contactId };
     let photoUrl;
 
     if (photo) {
@@ -84,21 +87,22 @@ export const patchContactController = async (req, res, ) => {
             photoUrl = await saveFileToUploadDir(photo);
         }
     }
-    const result = await updateContact(contactId,
+    const result = await updateContact(contactIdAndUserId,
         {
             ...req.body,
             photo: photoUrl ? photoUrl: req.body.photo,
-            userId,
         });
+
+        console.log("Update result:", result);
 
     if (!result) {
         throw(createHttpError(404, "Contact not found"));
     }
 
-    res.json({
+    res.status(200).json({
         status: 200,
         message: "Successfully patched a contact!",
-        data: result.contact,
+        data: result,
     });
 };
 
