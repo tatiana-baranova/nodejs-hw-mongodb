@@ -50,9 +50,9 @@ export const updateContact = async (contactIdAndUserId, payload, options = {}) =
         }
     );
     if (!rawResult) return null;
-    return {
-        rawResult,
-    };
+
+    return rawResult;
+
 };
 
 export const deleteContact = (id, userId) => ContactCollection.findOneAndDelete({ _id: id, userId });
