@@ -17,12 +17,14 @@ export const setupServer = () => {
     app.use(logger);
     app.use(cookieParser());
 
+    app.use('/api-docs', ...swaggerDocs());
+
     app.use(router);
+    app.use('/uploads', express.static(UPLOAD_DIR));
     app.use(notFoundHandler);
     app.use(errorHandler);
 
-    app.use('/uploads', express.static(UPLOAD_DIR));
-    app.use('/api-docs', swaggerDocs());
+
 
     app.use((req, res) => {
     res.status(404).json({ message: 'Route not found' });
