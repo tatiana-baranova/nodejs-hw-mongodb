@@ -34,7 +34,7 @@
           "$ref": "../../components/responses/401.yaml"
         },
         "tags": [
-          "contacts"
+          "Contacts"
         ],
         "summary": "Get list of contacts",
         "operationId": "getContacts",
@@ -177,9 +177,6 @@
         }
       },
       "post": {
-        "401": {
-          "$ref": "../../components/responses/401.yaml"
-        },
         "tags": [
           "Contacts"
         ],
@@ -271,15 +268,18 @@
                 }
               }
             }
+          },
+          "401": {
+            "400": {
+              "$ref": "../../components/responses/400.yaml"
+            },
+            "$ref": "#/components/responses/401"
           }
         }
       }
     },
-    "/contacts/{contactsId}": {
+    "/contacts/{Id}": {
       "get": {
-        "404": {
-          "$ref": "../../../components/responses/404.yaml"
-        },
         "tags": [
           "Contacts"
         ],
@@ -331,16 +331,19 @@
                 }
               }
             }
+          },
+          "400": {
+            "401": {
+              "$ref": "../../../components/responses/401.yaml"
+            },
+            "404": {
+              "$ref": "../../../components/responses/404.yaml"
+            },
+            "$ref": "#/components/responses/400"
           }
         }
       },
       "patch": {
-        "401": {
-          "$ref": "../../../components/responses/401.yaml"
-        },
-        "404": {
-          "$ref": "../../../components/responses/404.yaml"
-        },
         "tags": [
           "Contacts"
         ],
@@ -438,6 +441,15 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "404": {
+              "$ref": "../../../components/responses/404.yaml"
+            },
+            "$ref": "#/components/responses/401"
           }
         }
       },
@@ -467,6 +479,9 @@
         "responses": {
           "204": {
             "description": "No contact"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "404": {
@@ -552,166 +567,241 @@
             }
           },
           "401": {
-            "409": {
-              "$ref": "../../../components/responses/409.yaml"
-            },
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
           }
         }
       }
     },
     "/auth/login": {
       "post": {
-        "description": "Unauthorized error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 401
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login User",
+        "operationId": "loginUser",
+        "description": "Login user in the Application",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "User Email",
+                    "type": "string",
+                    "example": "john@gmail.com"
+                  },
+                  "password": {
+                    "description": "User Password",
+                    "type": "string",
+                    "example": "cdsbn515vgbbf"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully logged in an user!",
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "required": [
-                    "message"
+                    "status",
+                    "message",
+                    "data"
                   ],
                   "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 201
+                    },
                     "message": {
                       "type": "string",
-                      "example": "Access token expired"
+                      "example": "Successfully logged in an user!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "accessToken": "F0bHemvooANGkk37QXkAmIsHKwdUFEdC1FZe10+g"
+                      }
                     }
                   }
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
     },
     "/auth/logout": {
       "post": {
-        "description": "Unauthorized error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 401
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
-                  "type": "object",
-                  "required": [
-                    "message"
-                  ],
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Access token expired"
-                    }
-                  }
-                }
-              }
-            }
+        "tags": [
+          "Auth"
+        ],
+        "summary": "logout",
+        "operationId": "logoutUser",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No content"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
     },
     "/auth/refresh": {
       "post": {
-        "description": "Unauthorized error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 401
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Refresh Users Session",
+        "operationId": "refreshUsersSession",
+        "description": "Refresh Users Session in the Application",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Refresh token",
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "required": [
-                    "message"
+                    "status",
+                    "message",
+                    "data"
                   ],
                   "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
                     "message": {
                       "type": "string",
-                      "example": "Access token expired"
+                      "example": "Successfully refreshed a session!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "example": {
+                        "accessToken": "F0bHemvooANGkk37QXkAmIsHKwdUFEdC1FZe10+g"
+                      }
                     }
                   }
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
     },
     "/auth/send-reset-email": {
       "post": {
-        "description": "Unauthorized error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "required": [
-                "status",
-                "message",
-                "data"
-              ],
-              "properties": {
-                "status": {
-                  "type": "integer",
-                  "example": 401
-                },
-                "message": {
-                  "type": "string",
-                  "example": "UnauthorizedError"
-                },
-                "data": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Send email",
+        "operationId": "requestResetToken",
+        "description": "Send reset password message to email from the Application",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "description": "User email",
+                    "type": "string",
+                    "example": "john@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Send Email",
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
                   "required": [
-                    "message"
+                    "status",
+                    "message",
+                    "data"
                   ],
                   "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
                     "message": {
                       "type": "string",
-                      "example": "Access token expired"
+                      "example": " Reset password email has been successfully sent."
+                    },
+                    "data": {
+                      "type": "object"
                     }
                   }
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
@@ -862,6 +952,43 @@
       }
     },
     "responses": {
+      "400": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Bad request"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Ivalid request body"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "401": {
         "description": "Unauthorized error",
         "content": {
@@ -929,6 +1056,43 @@
                   "message": {
                     "type": "string",
                     "example": "Not found"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "409": {
+        "description": "Conflict error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": [
+                "status",
+                "message",
+                "data"
+              ],
+              "properties": {
+                "status": {
+                  "type": "integer",
+                  "example": 409
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Email in use"
+                },
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "message"
+                  ],
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email in use"
+                    }
                   }
                 }
               }

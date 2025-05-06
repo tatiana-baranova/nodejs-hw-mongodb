@@ -1,6 +1,6 @@
 tags:
   - Auth
-summery: Refresh Users Session
+summary: Refresh Users Session
 operationId: refreshUsersSession
 description: 'Refresh Users Session in the Application'
 security:
@@ -27,5 +27,7 @@ responses:
               type: object
               example:
                 accessToken: F0bHemvooANGkk37QXkAmIsHKwdUFEdC1FZe10+g
-'401':
-$ref: '../../../components/responses/401.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: ../../../components/responses/404.yaml
