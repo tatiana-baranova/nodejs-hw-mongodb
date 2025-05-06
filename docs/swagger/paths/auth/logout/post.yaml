@@ -1,11 +1,13 @@
 tags:
   - Auth
-summery: logout
+summary: logout
 operationId: logoutUser
 security:
   - bearerAuth: []
 responses:
   '204':
-  description: No content
+    description: No content
   '401':
-$ref: '../../../components/responses/401.yaml'
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: ../../../components/responses/404.yaml
