@@ -30,9 +30,6 @@
   "paths": {
     "/contacts": {
       "get": {
-        "401": {
-          "$ref": "../../components/responses/401.yaml"
-        },
         "tags": [
           "Contacts"
         ],
@@ -173,6 +170,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       },
@@ -269,10 +269,10 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
           "401": {
-            "400": {
-              "$ref": "../../components/responses/400.yaml"
-            },
             "$ref": "#/components/responses/401"
           }
         }
@@ -333,13 +333,13 @@
             }
           },
           "400": {
-            "401": {
-              "$ref": "../../../components/responses/401.yaml"
-            },
-            "404": {
-              "$ref": "../../../components/responses/404.yaml"
-            },
             "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       },
@@ -446,10 +446,10 @@
             "$ref": "#/components/responses/400"
           },
           "401": {
-            "404": {
-              "$ref": "../../../components/responses/404.yaml"
-            },
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       },
@@ -484,10 +484,10 @@
             "$ref": "#/components/responses/400"
           },
           "401": {
-            "404": {
-              "$ref": "../../../components/responses/404.yaml"
-            },
             "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
           }
         }
       }
