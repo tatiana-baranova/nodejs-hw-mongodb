@@ -979,7 +979,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Ivalid request body"
+                      "example": "Invalid request body or user ID"
                     }
                   }
                 }
