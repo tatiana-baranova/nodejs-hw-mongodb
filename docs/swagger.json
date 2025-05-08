@@ -278,7 +278,7 @@
         }
       }
     },
-    "/contacts/{Id}": {
+    "/contacts/{id}": {
       "get": {
         "tags": [
           "Contacts"
