@@ -7,18 +7,18 @@ content:
         - status
         - message
         - data
-    properties:
-      status:
-        type: integer
-        example: 404
-      message:
-        type: string
-        example: Not found
-      data:
-        type: object
-        required:
-          - message
-        properties:
-          message:
-            type: string
-            example: 'Not found'
+      properties:
+        status:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: Not found
+        data:
+          type: object
+          required:
+            - message
+          properties:
+            message:
+              type: string
+              example: 'Not found'

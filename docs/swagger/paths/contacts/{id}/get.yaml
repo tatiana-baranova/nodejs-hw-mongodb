@@ -31,7 +31,6 @@ responses:
               type: string
               example: Successfully found contact with id 680e21ddc1ef3c47b8a1f6ca!
             data:
-              type: object
               $ref: '../../../components/schemas/contact.yaml'
   '401':
     $ref: '../../../components/responses/401.yaml'
