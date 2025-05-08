@@ -331,6 +331,9 @@
               }
             }
           },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
           "401": {
             "$ref": "#/components/responses/401"
           },
@@ -476,6 +479,9 @@
           "204": {
             "description": "No contact"
           },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
           "401": {
             "$ref": "#/components/responses/401"
           },
@@ -610,7 +616,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successfully logged in an user!",
             "content": {
               "application/json": {
@@ -624,7 +630,7 @@
                   "properties": {
                     "status": {
                       "type": "integer",
-                      "example": 201
+                      "example": 200
                     },
                     "message": {
                       "type": "string",

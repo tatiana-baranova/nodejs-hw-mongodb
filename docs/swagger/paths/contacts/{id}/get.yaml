@@ -32,6 +32,8 @@ responses:
               example: Successfully found contact with id 680e21ddc1ef3c47b8a1f6ca!
             data:
               $ref: '../../../components/schemas/contact.yaml'
+  '400':
+    $ref: ../../../components/responses/400.yaml
   '401':
     $ref: '../../../components/responses/401.yaml'
   '404':

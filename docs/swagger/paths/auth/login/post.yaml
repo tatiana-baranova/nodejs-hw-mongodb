@@ -23,7 +23,7 @@ requestBody:
             type: string
             example: 'cdsbn515vgbbf'
 responses:
-  '201':
+  '200':
     description: Successfully logged in an user!
     content:
       application/json:
@@ -36,7 +36,7 @@ responses:
           properties:
             status:
               type: integer
-              example: 201
+              example: 200
             message:
               type: string
               example: 'Successfully logged in an user!'
